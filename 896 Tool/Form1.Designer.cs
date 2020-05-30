@@ -35,6 +35,7 @@
             this.folderTextbox = new System.Windows.Forms.TextBox();
             this.folderLabel = new System.Windows.Forms.Label();
             this.folderButton = new System.Windows.Forms.Button();
+            this.loadButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // fileTextBox
@@ -67,7 +68,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(24, 87);
+            this.button1.Location = new System.Drawing.Point(24, 125);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(164, 38);
             this.button1.TabIndex = 3;
@@ -103,11 +104,22 @@
             this.folderButton.UseVisualStyleBackColor = true;
             this.folderButton.Click += new System.EventHandler(this.folderButton_Click);
             // 
+            // loadButton
+            // 
+            this.loadButton.Location = new System.Drawing.Point(24, 77);
+            this.loadButton.Name = "loadButton";
+            this.loadButton.Size = new System.Drawing.Size(97, 23);
+            this.loadButton.TabIndex = 4;
+            this.loadButton.Text = "Tải danh sách";
+            this.loadButton.UseVisualStyleBackColor = true;
+            this.loadButton.Click += new System.EventHandler(this.loadButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(428, 295);
+            this.Controls.Add(this.loadButton);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.folderButton);
             this.Controls.Add(this.fileButton);
@@ -131,6 +143,7 @@
         private System.Windows.Forms.TextBox folderTextbox;
         private System.Windows.Forms.Label folderLabel;
         private System.Windows.Forms.Button folderButton;
+        private System.Windows.Forms.Button loadButton;
     }
 }
 
