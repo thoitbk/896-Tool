@@ -77,10 +77,10 @@ namespace _896_Tool
                     Household household = null;
                     int numMembers = 0;
                     int numRegistered = 0;
-                    for (int i = 2; i < data.GetLength(0); i++)
+                    for (int i = 2; i <= data.GetLength(0); i++)
                     {
-                        string name = data[i, 1].ToString();
-                        DateTime dateOfBirth = DateTime.Now;//DateTime.Parse(data[i, 2].ToString());
+                        string name = data[i, 1] != null ? data[i, 1].ToString() : "";
+                        string dateOfBirth = data[i, 2] != null ? data[i, 2].ToString() : "";
                         bool gender = (data[i, 3] != null && data[i, 3].ToString() == "1") ? true : false;
                         string id = (data[i, 4] != null) ? data[i, 4].ToString() : "";
                         bool isMainMember = (data[i, 5] != null && data[i, 5].ToString() == "1") ? true : false;

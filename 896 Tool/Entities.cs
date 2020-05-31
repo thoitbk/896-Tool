@@ -9,7 +9,7 @@ namespace _896_Tool
     class Person
     {
         public string Name { get; set; }
-        public DateTime DateOfBirth { get; set; }
+        public string DateOfBirth { get; set; }
         public bool Gender { get; set; }
         public string IdNumber { get; set; }
         public bool IsRegistered { get; set; }
