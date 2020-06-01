@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -33,7 +34,88 @@ namespace _896_Tool
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (folderTextbox.Text == null || folderTextbox.Text == "")
+            {
+                MessageBox.Show("Chon thu muc");
+            }
+            else
+            {
+                string folderPath = folderTextbox.Text;
+                Excel.Application excelApplication;
+                Excel.Workbook workbook;
+                Excel.Worksheet worksheet;
+                foreach (KeyValuePair<int, Household> household in village)
+                {
+                    string id = household.Key < 10 ? "0" + household.Key : household.Key.ToString();
+                    string mainMemberName = household.Value.MainMember.Name;
+                    string fileName = folderPath + @"\" + id.ToString() + " " + mainMemberName + ".xlsx";
+                    int pageNum = (int) Math.Ceiling(household.Value.NumMembers / 5.0);
+                    string templateFile = @"\phuctra" + pageNum + ".xlsx";
 
+                    File.Copy(Directory.GetCurrentDirectory() + templateFile, fileName, true);
+                    excelApplication = new Excel.Application();
+                    workbook = excelApplication.Workbooks.Open(fileName);
+                    worksheet = workbook.Worksheets[1];
+                    int[] rows = { 2, 45 };
+                    for (int i = 0; i < pageNum; i++)
+                    {
+                        worksheet.get_Range("A" + rows[i]).Value = worksheet.get_Range("A" + rows[i]).Value + " " + household.Value.MainMember.Name;
+                        worksheet.get_Range("G" + rows[i]).Value = worksheet.get_Range("G" + rows[i]).Value + " " + household.Key;
+                        worksheet.get_Range("R" + rows[i]).Value = worksheet.get_Range("R" + rows[i]).Value + " " + household.Value.NumRegistered + string.Format(" phiếu (thiếu {0})", household.Value.NumMembers - household.Value.NumRegistered);
+                        worksheet.get_Range("A" + (rows[i] + 1)).Value = worksheet.get_Range("A" + (rows[i] + 1)).Value + " " + addressTextbox.Text;
+                    }
+
+                    List<Person> members = new List<Person>();
+
+                    if (household.Value.MainMember.IsRegistered)
+                    {
+                        members.Add(household.Value.MainMember);
+                    }
+
+                    IEnumerable<Person> registered = null;
+                    IEnumerable<Person> notRegistered = null;
+                    if (household.Value.OtherMembers != null)
+                    {
+                        registered = household.Value.OtherMembers.Where(p => p.IsRegistered);
+                        notRegistered = household.Value.OtherMembers.Where(p => !p.IsRegistered);
+                    }
+
+                    if (registered != null)
+                    {
+                        members.AddRange(registered);
+                    }
+                    if (!household.Value.MainMember.IsRegistered)
+                    {
+                        members.Add(household.Value.MainMember);
+                    }
+                    if (notRegistered != null)
+                    {
+                        members.AddRange(notRegistered);
+                    }
+
+                    int[] nameRows = { 5, 48 };
+                    string[] nameCols = { "C", "H", "M", "R", "W" };
+
+                    for (int i = 0; i < members.Count; i++)
+                    {
+                        int r = i / 5;
+                        int c = i % 5;
+                        string rName = nameCols[c].ToString() + nameRows[r].ToString();
+                        worksheet.get_Range(rName).Value = members[i].Name;
+                    }
+
+                    worksheet.get_Range("D8:F11").Value = "D";
+
+                    workbook.Save();
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                    Marshal.ReleaseComObject(worksheet);
+                    workbook.Close();
+                    Marshal.ReleaseComObject(workbook);
+                    excelApplication.Quit();
+                    Marshal.ReleaseComObject(excelApplication);
+                }
+            }
         }
 
         private void folderButton_Click(object sender, EventArgs e)
@@ -88,11 +170,7 @@ namespace _896_Tool
                         bool isRegistered = (data[i, 7] != null && data[i, 7].ToString() == "1") ? false : true;
 
                         Person person = new Person() { Name = name, DateOfBirth = dateOfBirth, Gender = gender, IdNumber = id, IsRegistered = isRegistered };
-                        numMembers++;
-                        if (isRegistered)
-                        {
-                            numRegistered++;
-                        }
+                        
                         if (isMainMember)
                         {
                             if (household != null)
@@ -114,8 +192,15 @@ namespace _896_Tool
                                 household.OtherMembers = new List<Person>();
                             }
                             household.OtherMembers.Add(person);
+                            numMembers++;
+                            if (isRegistered)
+                            {
+                                numRegistered++;
+                            }
                         }
                     }
+                    household.NumMembers = numMembers;
+                    household.NumRegistered = numRegistered;
                 }
             }
         }

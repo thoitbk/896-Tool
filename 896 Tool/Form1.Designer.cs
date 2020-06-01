@@ -36,6 +36,7 @@
             this.folderLabel = new System.Windows.Forms.Label();
             this.folderButton = new System.Windows.Forms.Button();
             this.loadButton = new System.Windows.Forms.Button();
+            this.addressTextbox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // fileTextBox
@@ -68,7 +69,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(24, 125);
+            this.button1.Location = new System.Drawing.Point(24, 152);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(164, 38);
             this.button1.TabIndex = 3;
@@ -106,7 +107,7 @@
             // 
             // loadButton
             // 
-            this.loadButton.Location = new System.Drawing.Point(24, 77);
+            this.loadButton.Location = new System.Drawing.Point(24, 114);
             this.loadButton.Name = "loadButton";
             this.loadButton.Size = new System.Drawing.Size(97, 23);
             this.loadButton.TabIndex = 4;
@@ -114,11 +115,19 @@
             this.loadButton.UseVisualStyleBackColor = true;
             this.loadButton.Click += new System.EventHandler(this.loadButton_Click);
             // 
+            // addressTextbox
+            // 
+            this.addressTextbox.Location = new System.Drawing.Point(75, 77);
+            this.addressTextbox.Name = "addressTextbox";
+            this.addressTextbox.Size = new System.Drawing.Size(201, 20);
+            this.addressTextbox.TabIndex = 5;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(428, 295);
+            this.Controls.Add(this.addressTextbox);
             this.Controls.Add(this.loadButton);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.folderButton);
@@ -144,6 +153,7 @@
         private System.Windows.Forms.Label folderLabel;
         private System.Windows.Forms.Button folderButton;
         private System.Windows.Forms.Button loadButton;
+        private System.Windows.Forms.TextBox addressTextbox;
     }
 }
 
