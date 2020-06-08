@@ -23,4 +23,11 @@ namespace _896_Tool
         public int NumMembers { get; set; }
         public int NumRegistered { get; set; }
     }
+
+    class DC02
+    {
+        public Person Member { get; set; }
+        public List<String> Corrections { get; set; }
+        public string Attachment { get; set; }
+    }
 }

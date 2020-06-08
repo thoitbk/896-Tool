@@ -84,12 +84,18 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="test\DC02-1.docx" />
+    <None Include="test\DC02-2.docx" />
+    <None Include="test\DC02-3.docx" />
+    <None Include="test\DC02-4.docx" />
+    <None Include="test\DC02-5.docx" />
+    <None Include="test\input2.xlsx" />
+    <None Include="test\phuctra1.xlsx" />
+    <None Include="test\phuctra2.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="test\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

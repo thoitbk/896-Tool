@@ -35,19 +35,18 @@
             this.folderTextbox = new System.Windows.Forms.TextBox();
             this.folderLabel = new System.Windows.Forms.Label();
             this.folderButton = new System.Windows.Forms.Button();
-            this.loadButton = new System.Windows.Forms.Button();
             this.addressTextbox = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label1 = new System.Windows.Forms.Label();
-            this.checkButton = new System.Windows.Forms.Button();
-            this.checkLabel = new System.Windows.Forms.Label();
-            this.checkTextbox = new System.Windows.Forms.TextBox();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.DC02Button = new System.Windows.Forms.Button();
             this.DC02FolderButton = new System.Windows.Forms.Button();
             this.DC02Label = new System.Windows.Forms.Label();
             this.DC02Textbox = new System.Windows.Forms.TextBox();
-            this.DC02Button = new System.Windows.Forms.Button();
+            this.checkButton = new System.Windows.Forms.Button();
+            this.checkLabel = new System.Windows.Forms.Label();
+            this.checkTextbox = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -119,16 +118,6 @@
             this.folderButton.UseVisualStyleBackColor = true;
             this.folderButton.Click += new System.EventHandler(this.folderButton_Click);
             // 
-            // loadButton
-            // 
-            this.loadButton.Location = new System.Drawing.Point(85, 67);
-            this.loadButton.Name = "loadButton";
-            this.loadButton.Size = new System.Drawing.Size(252, 23);
-            this.loadButton.TabIndex = 4;
-            this.loadButton.Text = "Tải danh sách";
-            this.loadButton.UseVisualStyleBackColor = true;
-            this.loadButton.Click += new System.EventHandler(this.loadButton_Click);
-            // 
             // addressTextbox
             // 
             this.addressTextbox.Location = new System.Drawing.Point(61, 55);
@@ -140,7 +129,7 @@
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Location = new System.Drawing.Point(12, 103);
+            this.tabControl1.Location = new System.Drawing.Point(12, 74);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(404, 180);
@@ -162,6 +151,15 @@
             this.tabPage1.Text = "Tạo file excel kết quả kiểm tra";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 62);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(40, 13);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "Địa chỉ";
+            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.DC02Button);
@@ -179,42 +177,15 @@
             this.tabPage2.Text = "Sinh DC02";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // label1
+            // DC02Button
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 62);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(40, 13);
-            this.label1.TabIndex = 6;
-            this.label1.Text = "Địa chỉ";
-            // 
-            // checkButton
-            // 
-            this.checkButton.Location = new System.Drawing.Point(285, 21);
-            this.checkButton.Name = "checkButton";
-            this.checkButton.Size = new System.Drawing.Size(92, 23);
-            this.checkButton.TabIndex = 5;
-            this.checkButton.Text = "Chọn file";
-            this.checkButton.UseVisualStyleBackColor = true;
-            this.checkButton.Click += new System.EventHandler(this.checkButton_Click);
-            // 
-            // checkLabel
-            // 
-            this.checkLabel.AutoSize = true;
-            this.checkLabel.Location = new System.Drawing.Point(6, 26);
-            this.checkLabel.Name = "checkLabel";
-            this.checkLabel.Size = new System.Drawing.Size(48, 13);
-            this.checkLabel.TabIndex = 4;
-            this.checkLabel.Text = "Chọn file";
-            // 
-            // checkTextbox
-            // 
-            this.checkTextbox.BackColor = System.Drawing.SystemColors.Window;
-            this.checkTextbox.Location = new System.Drawing.Point(59, 23);
-            this.checkTextbox.Name = "checkTextbox";
-            this.checkTextbox.ReadOnly = true;
-            this.checkTextbox.Size = new System.Drawing.Size(201, 20);
-            this.checkTextbox.TabIndex = 3;
+            this.DC02Button.Location = new System.Drawing.Point(145, 110);
+            this.DC02Button.Name = "DC02Button";
+            this.DC02Button.Size = new System.Drawing.Size(100, 23);
+            this.DC02Button.TabIndex = 9;
+            this.DC02Button.Text = "Sinh DC02";
+            this.DC02Button.UseVisualStyleBackColor = true;
+            this.DC02Button.Click += new System.EventHandler(this.DC02Button_Click);
             // 
             // DC02FolderButton
             // 
@@ -244,23 +215,40 @@
             this.DC02Textbox.Size = new System.Drawing.Size(201, 20);
             this.DC02Textbox.TabIndex = 6;
             // 
-            // DC02Button
+            // checkButton
             // 
-            this.DC02Button.Location = new System.Drawing.Point(145, 110);
-            this.DC02Button.Name = "DC02Button";
-            this.DC02Button.Size = new System.Drawing.Size(100, 23);
-            this.DC02Button.TabIndex = 9;
-            this.DC02Button.Text = "Sinh DC02";
-            this.DC02Button.UseVisualStyleBackColor = true;
-            this.DC02Button.Click += new System.EventHandler(this.DC02Button_Click);
+            this.checkButton.Location = new System.Drawing.Point(285, 21);
+            this.checkButton.Name = "checkButton";
+            this.checkButton.Size = new System.Drawing.Size(92, 23);
+            this.checkButton.TabIndex = 5;
+            this.checkButton.Text = "Chọn file";
+            this.checkButton.UseVisualStyleBackColor = true;
+            this.checkButton.Click += new System.EventHandler(this.checkButton_Click);
+            // 
+            // checkLabel
+            // 
+            this.checkLabel.AutoSize = true;
+            this.checkLabel.Location = new System.Drawing.Point(6, 26);
+            this.checkLabel.Name = "checkLabel";
+            this.checkLabel.Size = new System.Drawing.Size(48, 13);
+            this.checkLabel.TabIndex = 4;
+            this.checkLabel.Text = "Chọn file";
+            // 
+            // checkTextbox
+            // 
+            this.checkTextbox.BackColor = System.Drawing.SystemColors.Window;
+            this.checkTextbox.Location = new System.Drawing.Point(59, 23);
+            this.checkTextbox.Name = "checkTextbox";
+            this.checkTextbox.ReadOnly = true;
+            this.checkTextbox.Size = new System.Drawing.Size(201, 20);
+            this.checkTextbox.TabIndex = 3;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(428, 295);
+            this.ClientSize = new System.Drawing.Size(428, 276);
             this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.loadButton);
             this.Controls.Add(this.fileButton);
             this.Controls.Add(this.fileLabel);
             this.Controls.Add(this.fileTextBox);
@@ -285,7 +273,6 @@
         private System.Windows.Forms.TextBox folderTextbox;
         private System.Windows.Forms.Label folderLabel;
         private System.Windows.Forms.Button folderButton;
-        private System.Windows.Forms.Button loadButton;
         private System.Windows.Forms.TextBox addressTextbox;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;

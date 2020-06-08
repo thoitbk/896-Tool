@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
+using Word = Microsoft.Office.Interop.Word;
 
 namespace _896_Tool
 {
@@ -26,6 +27,8 @@ namespace _896_Tool
             {
                 fileTextBox.Text = fileDialog.FileName;
             }
+
+            load();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -126,8 +129,6 @@ namespace _896_Tool
                         }
                     }
 
-                    
-
                     workbook.Save();
                     workbook.Close();
                     Marshal.ReleaseComObject(worksheet);
@@ -150,7 +151,7 @@ namespace _896_Tool
             }
         }
 
-        private void loadButton_Click(object sender, EventArgs e)
+        private void load()
         {
             string filePath = fileTextBox.Text;
             if (filePath == null)
@@ -272,15 +273,25 @@ namespace _896_Tool
             int householdId = int.Parse(arr[0]);
 
             Household household = village[householdId];
+            List<Person> members = new List<Person>();
+            members.Add(household.MainMember);
+            if (household.OtherMembers != null)
+            {
+                members.AddRange(household.OtherMembers);
+            }
 
             Excel.Application excelApplication = new Excel.Application(); ;
             Excel.Workbook workbook = excelApplication.Workbooks.Open(checkFileName);
             Excel.Worksheet worksheet = worksheet = workbook.Worksheets[1];
 
-            List<string> corrections = new List<string>();
+            List<string> corrections;
 
             Excel.Range titles1 = worksheet.get_Range("B7:B19");
             Excel.Range titles2 = worksheet.get_Range("B21:B35");
+            string address = worksheet.get_Range("A3").Value.ToString();
+            address = address.Split(':')[1].Trim();
+
+            List<DC02> dc02s = new List<DC02>();
 
             for (int i = 0; i < household.NumRegistered; i++)
             {
@@ -289,6 +300,7 @@ namespace _896_Tool
                 object[,] data1 = (object[,]) range1.Value2;
                 object[,] data2 = (object[,]) range2.Value2;
 
+                corrections = new List<string>();
                 for (int j = 1; j <= data1.GetLength(0); j++)
                 {
                     for (int k = 1; k <= data1.GetLength(1); k++)
@@ -321,7 +333,13 @@ namespace _896_Tool
                     }
                 }
 
-                
+                if (corrections.Count > 0)
+                {
+                    string name = worksheet.get_Range(nameLocations[i]).Value.ToString();
+                    string attachment = worksheet.get_Range(nameLocations[i]).Comment != null ? worksheet.get_Range(nameLocations[i]).Comment.Text() : "";
+                    var person = members.Where(p => p.Name == name).Single();
+                    dc02s.Add(new DC02() { Member = person, Corrections = corrections, Attachment = attachment });
+                }
             }
 
             workbook.Close();
@@ -332,10 +350,69 @@ namespace _896_Tool
             excelApplication.Quit();
             Marshal.ReleaseComObject(excelApplication);
 
-            foreach (String s in corrections)
+            if (dc02s.Count > 0)
             {
-                MessageBox.Show(s);
-            }
+                string templateFile = Directory.GetCurrentDirectory() + @"\DC02-" + dc02s.Count + ".docx";
+                string dc02File = DC02Textbox.Text + @"\" + string.Format("DC02 {0} {1}.docx", household.HouseholdId, household.MainMember.Name);
+
+                File.Copy(templateFile, dc02File, true);
+
+                Word.Application wordApplication = new Word.Application();
+                Word.Document document = wordApplication.Documents.Open(dc02File);
+
+                for (int i = 0; i < dc02s.Count; i++)
+                {
+                    string rName = dc02s[i].Member.Name != null ? dc02s[i].Member.Name : "";
+                    string rDOB = dc02s[i].Member.DateOfBirth != null ? dc02s[i].Member.DateOfBirth : "";
+                    string rGender = dc02s[i].Member.Gender ? "Nam" : "Nữ";
+                    string rId = dc02s[i].Member.IdNumber != null ? dc02s[i].Member.IdNumber : "";
+                    string correction = "";
+                    foreach (string str in dc02s[i].Corrections)
+                    {
+                        correction += " - " + str + "\x0B";
+                    }
+
+                    FindAndReplace(wordApplication, string.Format("<name{0}>", i + 1), rName);
+                    FindAndReplace(wordApplication, string.Format("<dob{0}>", i + 1), rDOB);
+                    FindAndReplace(wordApplication, string.Format("<gender{0}>", i + 1), rGender);
+                    FindAndReplace(wordApplication, string.Format("<id{0}>", i + 1), rId);
+                    FindAndReplace(wordApplication, string.Format("<address{0}>", i + 1), address);
+                    
+                    FindAndReplace(wordApplication, string.Format("<update{0}>", i + 1), correction);
+                    FindAndReplace(wordApplication, string.Format("<attachments{0}>", i + 1), dc02s[i].Attachment);
+                }
+
+                document.Save();
+                Marshal.ReleaseComObject(document);
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                wordApplication.Quit();
+                Marshal.ReleaseComObject(wordApplication);
+            }     
+        }
+
+        private void FindAndReplace(Word.Application doc, object findText, object replaceWithText)
+        {
+            //options
+            object matchCase = false;
+            object matchWholeWord = true;
+            object matchWildCards = false;
+            object matchSoundsLike = false;
+            object matchAllWordForms = false;
+            object forward = true;
+            object format = false;
+            object matchKashida = false;
+            object matchDiacritics = false;
+            object matchAlefHamza = false;
+            object matchControl = false;
+            object read_only = false;
+            object visible = true;
+            object replace = 2;
+            object wrap = 1;
+            //execute find and replace
+            doc.Selection.Find.Execute(ref findText, ref matchCase, ref matchWholeWord,
+                ref matchWildCards, ref matchSoundsLike, ref matchAllWordForms, ref forward, ref wrap, ref format, ref replaceWithText, ref replace,
+                ref matchKashida, ref matchDiacritics, ref matchAlefHamza, ref matchControl);
         }
     }  
 }
