@@ -26,9 +26,8 @@ namespace _896_Tool
             if (result == DialogResult.OK)
             {
                 fileTextBox.Text = fileDialog.FileName;
+                load();
             }
-
-            load();
         }
 
         private void button1_Click(object sender, EventArgs e)

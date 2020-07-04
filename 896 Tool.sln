@@ -5,16 +5,22 @@ VisualStudioVersion = 16.0.30104.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "896 Tool", "896 Tool\896 Tool.csproj", "{8059F6DF-0DB9-4023-A480-D2A358EB3B10}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DC02 tool", "DC02 tool\DC02 tool.csproj", "{2A8708E7-5B66-45AD-B1C1-F46719AFA718}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8059F6DF-0DB9-4023-A480-D2A358EB3B10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8059F6DF-0DB9-4023-A480-D2A358EB3B10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8059F6DF-0DB9-4023-A480-D2A358EB3B10}.Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{8059F6DF-0DB9-4023-A480-D2A358EB3B10}.Debug|Any CPU.Build.0 = Release|Any CPU
 		{8059F6DF-0DB9-4023-A480-D2A358EB3B10}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8059F6DF-0DB9-4023-A480-D2A358EB3B10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A8708E7-5B66-45AD-B1C1-F46719AFA718}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A8708E7-5B66-45AD-B1C1-F46719AFA718}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A8708E7-5B66-45AD-B1C1-F46719AFA718}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A8708E7-5B66-45AD-B1C1-F46719AFA718}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
