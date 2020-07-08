@@ -95,15 +95,17 @@ namespace DC02_tool
             Word.Range source = tempDoc.Content;
             source.Copy();
 
-            object what = Word.WdGoToItem.wdGoToLine;
-            object which = Word.WdGoToDirection.wdGoToLast;
-            generatedDoc.GoTo(ref what, ref which, null, null);
+
+            generatedDoc.Characters.Last.Select();
+            wordApplication.Selection.Collapse(); 
+
+            Object objUnit = Word.WdUnits.wdStory;
+            wordApplication.Selection.EndKey(ref objUnit, null);
+
+            wordApplication.Selection.PasteAndFormat(Word.WdRecoveryType.wdPasteDefault);
+
             generatedDoc.Words.Last.InsertBreak(Word.WdBreakType.wdPageBreak);
 
-            wordApplication.Selection.EndKey(Word.WdUnits.wdStory, null);
-
-            //generatedDoc.PasteAndFormat(Word.WdRecoveryType.wdPasteDefault);
-            generatedDoc.Content.PasteAndFormat(Word.WdRecoveryType.wdFormatOriginalFormatting);
             generatedDoc.Save();
 
             tempDoc.Close(SaveChanges: Word.WdSaveOptions.wdDoNotSaveChanges);
@@ -120,7 +122,7 @@ namespace DC02_tool
         private void browseFileButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog fileDialog = new OpenFileDialog();
-            fileDialog.Filter = "doc file (*.doc)|*.doc|docx file (*.docx)|*.docx";
+            fileDialog.Filter = "docx file (*.docx)|*.docx|doc file (*.doc)|*.doc";
             DialogResult result = fileDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
