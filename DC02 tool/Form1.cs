@@ -15,11 +15,12 @@ namespace DC02_tool
 {
     public partial class Form1 : Form
     {
-        private string templateFile = Directory.GetCurrentDirectory() + @"\dc02.docx";
-        private string tempFile = Directory.GetCurrentDirectory() + @"\temp.docx";
-        private string filePath;
+        private const string TEMPLATE_FILE = @"dc02.docx";
+        private string templateFile = Directory.GetCurrentDirectory() + @"\" + TEMPLATE_FILE;
+        private string genFileName;
+        private string genFilePath;
         private Word.Application wordApplication;
-        private Word.Document tempDoc;
+        private Word.Document templateDoc;
         private Word.Document generatedDoc;
 
         public Form1()
@@ -48,7 +49,7 @@ namespace DC02_tool
             string update = updateRichTextbox.Text;
             string attachment = attachmentRichTextbox.Text;
 
-            if (filePath == null || filePath == "")
+            if (genFilePath == null || genFilePath == "")
             {
                 MessageBox.Show("Chọn file");
                 return;
@@ -60,55 +61,51 @@ namespace DC02_tool
                 return;
             }
 
-            tempDoc = wordApplication.Documents.Open(tempFile);
+            init();
 
-            FindAndReplace(tempDoc, "{name}", name.ToUpper());
+            FindAndReplace(templateDoc, "{name}", name.ToUpper());
 
             char[] dobArr = dob.ToCharArray();
             for (int i = 0; i < dobArr.Length; i++)
             {
-                FindAndReplace(tempDoc, "{d" + i + "}", dobArr[i].ToString());
+                FindAndReplace(templateDoc, "{d" + i + "}", dobArr[i].ToString());
             }
 
             string checkLoc = gender ? "0" : "1";
             string uncheckLoc = !gender ? "0" : "1";
-            FindAndReplace(tempDoc, "{s" + checkLoc + "}", "X");
-            FindAndReplace(tempDoc, "{s" + uncheckLoc + "}", "");
+            FindAndReplace(templateDoc, "{s" + checkLoc + "}", "X");
+            FindAndReplace(templateDoc, "{s" + uncheckLoc + "}", "");
 
             char[] idArr = id.ToCharArray();
             for (int i = 0; i < 12; i++)
             {
                 if (i < idArr.Length)
                 {
-                    FindAndReplace(tempDoc, "{i" + i + "}", idArr[i].ToString());
+                    FindAndReplace(templateDoc, "{i" + i + "}", idArr[i].ToString());
                 }
                 else
                 {
-                    FindAndReplace(tempDoc, "{i" + i + "}", "");
+                    FindAndReplace(templateDoc, "{i" + i + "}", "");
                 }
             }
 
-            FindAndReplace(tempDoc, "{address}", address);
-            FindAndReplace(tempDoc, "{update}", update);
-            FindAndReplace(tempDoc, "{attachment}", attachment);
+            FindAndReplace(templateDoc, "{address}", address);
+            FindAndReplace(templateDoc, "{update}", update);
+            FindAndReplace(templateDoc, "{attachment}", attachment);
 
-            Word.Range source = tempDoc.Content;
+            Word.Range source = templateDoc.Content;
             source.Copy();
-
 
             generatedDoc.Characters.Last.Select();
             wordApplication.Selection.Collapse(); 
-
             Object objUnit = Word.WdUnits.wdStory;
             wordApplication.Selection.EndKey(ref objUnit, null);
-
             wordApplication.Selection.PasteAndFormat(Word.WdRecoveryType.wdPasteDefault);
-
             generatedDoc.Words.Last.InsertBreak(Word.WdBreakType.wdPageBreak);
 
             generatedDoc.Save();
-
-            tempDoc.Close(SaveChanges: Word.WdSaveOptions.wdDoNotSaveChanges);
+            
+            templateDoc.Close(SaveChanges: Word.WdSaveOptions.wdDoNotSaveChanges);
 
             nameTextbox.Text = "";
             householdIdTextbox.Text = "";
@@ -127,14 +124,18 @@ namespace DC02_tool
             if (result == DialogResult.OK)
             {
                 fileTextbox.Text = fileDialog.FileName;
-                filePath = fileTextbox.Text;
+                genFilePath = fileTextbox.Text;
+                genFileName = Path.GetFileName(genFilePath);
 
-                wordApplication = new Word.Application();
-                File.Copy(templateFile, tempFile);
-
-                generatedDoc = wordApplication.Documents.Open(filePath);
-
+                init();
             }
+        }
+
+        private void init()
+        {
+            if (wordApplication == null) wordApplication = new Word.Application();
+            if (!IsDocOpen(genFileName)) generatedDoc = wordApplication.Documents.Open(genFilePath);
+            if (!IsDocOpen(TEMPLATE_FILE)) templateDoc = wordApplication.Documents.Open(templateFile);
         }
 
         private void FindAndReplace(Word.Document doc, object findText, object replaceWithText)
@@ -156,16 +157,26 @@ namespace DC02_tool
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            generatedDoc.Close();
-            Marshal.ReleaseComObject(tempDoc);
-            Marshal.ReleaseComObject(generatedDoc);
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
+            if (wordApplication != null)
+            {
+                generatedDoc.Close();
+                Marshal.ReleaseComObject(templateDoc);
+                Marshal.ReleaseComObject(generatedDoc);
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
 
-            wordApplication.Quit();
-            Marshal.ReleaseComObject(wordApplication);
+                wordApplication.Quit();
+                Marshal.ReleaseComObject(wordApplication);
+            }
+        }
 
-            File.Delete(tempFile);
+        private bool IsDocOpen(string name)
+        {
+            foreach (Word.Document d in wordApplication.Documents)
+            {
+                if (d.Name == name) return true;
+            }
+            return false;
         }
     }
 }
