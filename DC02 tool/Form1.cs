@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Word = Microsoft.Office.Interop.Word;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace DC02_tool
 {
@@ -19,6 +20,7 @@ namespace DC02_tool
         private string templateFile = Directory.GetCurrentDirectory() + @"\" + TEMPLATE_FILE;
         private string genFileName;
         private string genFilePath;
+        private string excelFilePath;
         private Word.Application wordApplication;
         private Word.Document templateDoc;
         private Word.Document generatedDoc;
@@ -177,6 +179,47 @@ namespace DC02_tool
                 if (d.Name == name) return true;
             }
             return false;
+        }
+
+        private void browseExcelButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.Filter = "xlsx file (*.xlsx)|*.xlsx|xls file (*.xls)|*.xls";
+            DialogResult result = fileDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                excelTextbox.Text = fileDialog.FileName;
+                excelFilePath = excelTextbox.Text;
+            }
+        }
+
+        private void exportButton_Click(object sender, EventArgs e)
+        {
+            if (excelFilePath == null || excelFilePath == "")
+            {
+                MessageBox.Show("Chọn file excel");
+                return;
+            }
+
+            Excel.Application excelApplication = new Excel.Application();
+            Excel.Workbook workbook = excelApplication.Workbooks.Open(excelFilePath);
+            Excel.Worksheet worksheet = workbook.Worksheets[1];
+            Excel.Range range = worksheet.UsedRange;
+
+            object[,] data = (object[,])range.Value2;
+
+            workbook.Close();
+
+            Marshal.ReleaseComObject(range);
+            Marshal.ReleaseComObject(worksheet);
+            Marshal.ReleaseComObject(workbook);
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            excelApplication.Quit();
+            Marshal.ReleaseComObject(excelApplication);
+
+
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -412,6 +413,23 @@ namespace _896_Tool
             doc.Selection.Find.Execute(ref findText, ref matchCase, ref matchWholeWord,
                 ref matchWildCards, ref matchSoundsLike, ref matchAllWordForms, ref forward, ref wrap, ref format, ref replaceWithText, ref replace,
                 ref matchKashida, ref matchDiacritics, ref matchAlefHamza, ref matchControl);
+        }
+
+        private string FormatDate(object d)
+        {
+            string date = "";
+            string format = "yyyy";
+            DateTime datetime;
+            if (DateTime.TryParseExact(d.ToString(), format, new CultureInfo("en-US"), DateTimeStyles.None, out datetime))
+            {
+                date = datetime.ToString("yyyy");
+            }
+            else
+            {
+                date = DateTime.FromOADate(double.Parse(d.ToString())).ToString("dd/MM/yyyy");
+            }
+
+            return date;
         }
     }  
 }
